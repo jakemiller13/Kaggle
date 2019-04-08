@@ -30,3 +30,15 @@ plt.bar(industry[industry_counts_gt_200],
 plt.title('Industry with Greater Than 200 Counts')
 plt.xticks(rotation = 'vertical')
 plt.show()
+
+print('\n--- Industry with most AE ---\n' + \
+      industry[np.argmax(industry_counts)])
+
+product, product_counts = np.unique(df['PRI_Reported Brand/Product Name'],
+                                    return_counts = True)
+top_products = [[product_counts[i], product[i]] for i in range(len(product))]
+
+print('\n--- Top 10 Products with Most AE ---' + \
+      '\n-Note: number 1 product is Redacted-')
+[print(i) for i in sorted(top_products, reverse = True)[1:11]]
+#      str(sorted(top_products, reverse = True)[1:11]))
