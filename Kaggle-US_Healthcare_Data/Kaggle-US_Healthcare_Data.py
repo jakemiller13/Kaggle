@@ -30,9 +30,18 @@ cat = df.columns.tolist()
 cat.append('Target')
 new_df = pd.DataFrame(columns = cat)
 
-# Add only rows that belong to large categories
+# Add only rows/targets that belong to large categories
 for i in range(df.shape[0]):
     if df.iloc[i]['Shrt_Desc'].split(',')[0] in large_categories:
-        new_df.append(row)
+        new_df = new_df.append(df.iloc[i])
+        new_df.iloc[-1]['Target'] = df.iloc[i]['Shrt_Desc'].split(',')[0]
 
-# TODO large categories become targets
+'''
+new_df.iloc[-1]['Target'] = 'test'
+__main__:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame
+
+See the caveats in the documentation:
+http://pandas.pydata.org/pandas-docs/stable/indexing.html#
+indexing-view-versus-copy
+'''
