@@ -34,7 +34,7 @@ new_df = pd.DataFrame(columns = cat)
 for i in range(df.shape[0]):
     if df.iloc[i]['Shrt_Desc'].split(',')[0] in large_categories:
         new_df = new_df.append(df.iloc[i])
-        new_df.iloc[-1]['Target'] = df.iloc[i]['Shrt_Desc'].split(',')[0]
+        new_df.iloc[-1, -1] = df.iloc[i]['Shrt_Desc'].split(',')[0]
 
 '''
 new_df.iloc[-1]['Target'] = 'test'
