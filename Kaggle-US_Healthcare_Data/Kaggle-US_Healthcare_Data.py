@@ -71,7 +71,7 @@ for i in range(1, 41):
                         len(y_test))
 
 # Plot correct predictions for Decision Tree Classifier
-plt.plot(range(1, 41), tree_correct)
+plt.plot(range(1, 41), tree_correct, 0, 100)
 plt.xlabel('Depth of Decision Tree')
 plt.ylabel('Correct Predictions (%)')
 plt.title('Decision Tree Classifier')
@@ -91,7 +91,7 @@ for i in range(1, 41):
                          len(y_test))
 
 # Plot correct predictions for Random Forest Classifier
-plt.plot(range(1, 41), randf_correct)
+plt.plot(range(1, 41), randf_correct, 0, 100)
 plt.xlabel('Depth of Decision Tree Used')
 plt.ylabel('Correct Predictions (%)')
 plt.title('Random Forest Classifier - 100 Trees Used')
