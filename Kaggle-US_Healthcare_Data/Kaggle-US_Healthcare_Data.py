@@ -74,12 +74,18 @@ for i in range(1, 25):
 plt.plot(range(1, 25), tree_correct, 0, 100)
 plt.xlabel('Depth of Decision Tree')
 plt.ylabel('Correct Predictions (%)')
+plt.ylim(0, 100)
+plt.xlim(0, 30)
 plt.title('Decision Tree Classifier')
 plt.show()
 
+# Decision Accuracies
+print('\n--- Decision Tree Accuracy With Depth 25 ---')
+print(round(tree_correct[-1], 2))
+
 # Train Random Forest Classifier
 combined_randf = {}
-num_trees = [10, 25, 50, 100, 500]
+num_trees = [2, 5, 10, 25, 50, 100, 500]
 print('\n--- Training Random Forest Classifiers ---')
 for trees in num_trees:
     randf_correct = []
@@ -107,6 +113,11 @@ plt.xlim(0, 30)
 plt.title('Random Forest Classifier')
 plt.legend(labels)
 plt.show()
+
+# Random Forest Accuracies
+print('\n--- Random Forest Final Accuracy ---')
+for i in num_trees:
+    print('[' + str(i) + ']: ' + str(round(combined_randf[i][-1], 2)))
 
 # Train Gradient Boosted Classifier Trees
 combined_grbc = {}
@@ -137,3 +148,8 @@ plt.xlim(0, 30)
 plt.title('Gradient Boosting Classifier')
 plt.legend(grbc_labels)
 plt.show()
+
+# Gradient Boosting Final Accuracies
+print('\n--- Gradient Boosting Final Accuracy ---')
+for i in num_trees:
+    print('[' + str(i) + ']: ' + str(round(combined_grbc[i][-1], 2)))
