@@ -11,6 +11,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
+from sklearn.tree import export_graphviz
 
 # Load data and data description description
 train = pd.read_csv('./Data/train.csv')
@@ -35,28 +36,47 @@ test[test.columns[:10]] = std_scaler.fit_transform(test[test.columns[:10]])
 forest_cl = RandomForestClassifier()
 
 # GridSearchCV allows us to optimize parameters
-param_grid = [{'n_estimators': [10, 25, 50, 100],
+param_grid = [{'n_estimators': [50, 100, 200, 500],
                'max_depth': [2, 4, 6],
                'max_features': [2, 4, 6, 8, 10],
                'max_leaf_nodes': [2, 4, 8, 16]},
               {'bootstrap': [False],
-               'n_estimators': [10, 25, 50, 100],
+               'n_estimators': [50, 100, 200, 500],
                'max_depth': [2, 4, 6],
                'max_features': [2, 4, 6, 8, 10],
                'max_leaf_nodes': [2, 4, 8, 16]}]
 
-# TODO you can mess around here, try different scoring
-grid_search = GridSearchCV(forest_cl,
-                           param_grid,
-                           cv = 5,
-                           scoring = 'neg_mean_squared_error',
-                           verbose = 2)
-grid_search.fit(X_train, y_train)
+# Only run if necessary because this takes a while
+def run_grid_search(param_grid, verbose = 0):
+    '''
+    Returns a grid_search result based on "param_grid"
+    '''
+    # TODO you can mess around here, try different scoring
+    grid_search = GridSearchCV(forest_cl,
+                               param_grid,
+                               cv = 5,
+                               scoring = 'neg_log_loss',
+                               verbose = 2)
+    grid_search.fit(X_train, y_train)
+    return grid_search
 
+try:
+    grid_search
+except NameError:
+    grid_search = run_grid_search(param_grid, verbose = 2)
+
+# Get results of grid search
 cvres = grid_search.cv_results_
 for mean_score, params in zip(cvres['mean_test_score'], cvres['params']):
     print(round(np.sqrt(-mean_score), 3), params)
 
 print('\n--- GridSearchCV Best Parameters ---\n', grid_search.best_params_)
-
 best = grid_search.best_estimator_
+
+# Export graph of best estimator
+export_graphviz(best,
+                out_file = 'best_classifier.dot',
+                feature_names = X_train.columns,
+                class_names = list(range(1,8)),
+                rounded = True,
+                filled = True)
