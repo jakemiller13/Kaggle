@@ -35,16 +35,28 @@ test[test.columns[:10]] = std_scaler.fit_transform(test[test.columns[:10]])
 forest_cl = RandomForestClassifier()
 
 # GridSearchCV allows us to optimize parameters
-param_grid = [{'n_estimators': [2, 5, 10, 25, 50],
-               'max_features': [2, 4, 6, 8, 10]},
+param_grid = [{'n_estimators': [10, 25, 50, 100],
+               'max_depth': [2, 4, 6],
+               'max_features': [2, 4, 6, 8, 10],
+               'max_leaf_nodes': [2, 4, 8, 16]},
               {'bootstrap': [False],
-               'n_estimators': [2, 5, 10, 25, 50],
-               'max_features': [2, 4, 6, 8, 10]}]
+               'n_estimators': [10, 25, 50, 100],
+               'max_depth': [2, 4, 6],
+               'max_features': [2, 4, 6, 8, 10],
+               'max_leaf_nodes': [2, 4, 8, 16]}]
 
 # TODO you can mess around here, try different scoring
 grid_search = GridSearchCV(forest_cl,
                            param_grid,
                            cv = 5,
-                           scoring = 'neg_mean_squared_error')
+                           scoring = 'neg_mean_squared_error',
+                           verbose = 2)
 grid_search.fit(X_train, y_train)
-print('--- GridSearchCV Best Parameters ---\n', grid_search.best_params_)
+
+cvres = grid_search.cv_results_
+for mean_score, params in zip(cvres['mean_test_score'], cvres['params']):
+    print(round(np.sqrt(-mean_score), 3), params)
+
+print('\n--- GridSearchCV Best Parameters ---\n', grid_search.best_params_)
+
+best = grid_search.best_estimator_
