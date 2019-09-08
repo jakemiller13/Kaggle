@@ -22,29 +22,29 @@ with open('./Data/Data_Description.txt') as file:
 # No need to carry ID through model
 train, test = train.drop('Id', axis = 1), test.drop('Id', axis = 1)
 
-X_train, X_test, y_train, y_test = train_test_split(train[train.columns[:-1]],
-                                                    train[train.columns[-1]],
-                                                    test_size = .2,
-                                                    random_state = 42)
-
 # Standard scaler on columns that are NOT one-hot encoded
 std_scaler = StandardScaler()
 train[train.columns[:10]] = std_scaler.fit_transform(train[train.columns[:10]])
 test[test.columns[:10]] = std_scaler.fit_transform(test[test.columns[:10]])
 
+X_train, X_test, y_train, y_test = train_test_split(train[train.columns[:-1]],
+                                                    train[train.columns[-1]],
+                                                    test_size = .2,
+                                                    random_state = 42)
+
 # Instantiate RandomForestClassifier
 forest_cl = RandomForestClassifier()
 
 # GridSearchCV allows us to optimize parameters
-param_grid = [{'n_estimators': [50, 100, 200, 500],
-               'max_depth': [2, 4, 6],
-               'max_features': [2, 4, 6, 8, 10],
-               'max_leaf_nodes': [2, 4, 8, 16]},
+param_grid = [{'n_estimators': [100, 500, 1000],
+               'max_depth': [6, 8, 10],
+               'max_features': [5, 10, 20],
+               'max_leaf_nodes': [8, 16, 32]},
               {'bootstrap': [False],
-               'n_estimators': [50, 100, 200, 500],
-               'max_depth': [2, 4, 6],
-               'max_features': [2, 4, 6, 8, 10],
-               'max_leaf_nodes': [2, 4, 8, 16]}]
+               'n_estimators': [100, 500, 1000],
+               'max_depth': [5, 10, 20],
+               'max_features': [6, 8, 10],
+               'max_leaf_nodes': [8, 16, 32]}]
 
 # Only run if necessary because this takes a while
 def run_grid_search(param_grid, verbose = 0):
@@ -77,6 +77,6 @@ best = grid_search.best_estimator_
 export_graphviz(best,
                 out_file = 'best_classifier.dot',
                 feature_names = X_train.columns,
-                class_names = list(range(1,8)),
+                class_names = ['1', '2', '3', '4', '5', '6', '7'],
                 rounded = True,
                 filled = True)
