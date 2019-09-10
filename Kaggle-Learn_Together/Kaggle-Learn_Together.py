@@ -81,6 +81,13 @@ for mean_score, params in zip(rf_cvres['mean_test_score'],
 print('\n--- GridSearchCV Best Parameters ---\n', rf_grid_search.best_params_)
 rf_best = rf_grid_search.best_estimator_
 
+#################################################
+# {'max_depth': 10, 'max_features': 20,         #
+#  'max_leaf_nodes': 32, 'n_estimators': 1000}  #
+#                                               #
+# Random Forest Accuracy Accuracy: 0.72         #
+#################################################
+
 # Export graph of a single decision tree just to see what it looks like
 export_graphviz(rf_best.estimators_[0],
                 out_file = 'rf_best_classifier.dot',
@@ -90,7 +97,7 @@ export_graphviz(rf_best.estimators_[0],
                 filled = True)
 
 # Random Forest Accuracy
-print('Random Forest Accuracy Accuracy: ' +\
+print('Random Forest Accuracy: ' +\
       str(round((rf_best.predict(X_test) == y_test).sum() / len(y_test), 2)))
 
 #######################
@@ -111,9 +118,8 @@ ada_param_grid = [{#'n_estimators' : [100],
 def adaboost_grid_search(clf, param_grid, verbose = 0):
     '''
     Returns a AdaBoost grid_search result based on "param_grid"
-    '''
-    # TODO you can mess around here, try different scoring
-    
+    NOTE: This takes a LONG time to run, so don't do it often
+    '''    
     ada_clf = AdaBoostClassifier(clf)
     
     ada_grid_search = GridSearchCV(ada_clf,
@@ -141,5 +147,12 @@ print('\n--- GridSearchCV Best Parameters ---\n', ada_grid_search.best_params_)
 ada_best = ada_grid_search.best_estimator_
 
 # Random Forest Accuracy
-print('AdaBoost Accuracy Accuracy: ' +\
+print('\nAdaBoost Accuracy: ' +\
       str(round((ada_best.predict(X_test) == y_test).sum() / len(y_test), 2)))
+
+###############################################################################
+# {'base_estimator__max_depth': 10, 'base_estimator__max_features': 20,       #
+# 'base_estimator__max_leaf_nodes': 32, 'base_estimator__n_estimators': 1000} #
+#                                                                             #
+# AdaBoost Accuracy: 0.69                                                     #
+###############################################################################
